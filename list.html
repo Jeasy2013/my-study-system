@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>资源列表</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
+        body{background:#f5f7fa;}
+        .nav{background:#007bff;color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;}
+        .nav a{color:white;margin-left:20px;text-decoration:none;}
+        .container{padding:30px;max-width:1000px;margin:0 auto;}
+        .search-box{margin-bottom:20px;display:flex;gap:10px;}
+        #search{flex:1;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:15px;}
+        .search-btn{padding:10px 20px;background:#007bff;color:white;border:none;border-radius:5px;cursor:pointer;}
+        .item{background:white;padding:15px;border-radius:8px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center;}
+        .item h4{color:#333;margin-bottom:5px;}
+        .item p{color:#666;font-size:14px;}
+        .collect{padding:6px 12px;background:#28a745;color:white;border:none;border-radius:4px;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <h2>计科学习资源管理系统</h2>
+        <div>
+            <a href="index.html">首页</a>
+            <a href="list.html">资源列表</a>
+            <a href="upload.html">上传资源</a>
+            <a href="user.html">个人中心</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="search" placeholder="搜索资源名称">
+            <button class="search-btn" onclick="search()">搜索</button>
+        </div>
+
+        <div id="list-box"></div>
+    </div>
+
+    <script>
+        // 系统自带的资源
+               // 系统自带的资源（加了模拟链接）
+        let resData = [
+            {name:"C语言入门教程.pdf", type:"编程语言", desc:"基础语法+课后习题", link:"https://www.bilibili.com/video/BV17s411s7tQ/"},
+            {name:"数据结构网课.mp4", type:"数据结构", desc:"B站精讲全套", link:"https://www.bilibili.com/video/BV1bW411c7f5/"},
+            {name:"计算机网络思维导图.xmind", type:"计算机网络", desc:"七层模型+协议", link:"https://baike.baidu.com/item/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/14533"},
+            {name:"操作系统期末复习题.doc", type:"操作系统", desc:"真题+答案", link:"https://wenku.baidu.com/"}
+        ];
+
+        // 页面加载时显示所有资源
+        window.onload = function() {
+            showList(resData);
+        }
+
+        // 展示列表
+        function showList(data) {
+            let html = "";
+            data.forEach(item => {
+                html += `
+                <div class="item" onclick="showDetail('${item.name}','${item.type}','${item.desc}')">
+                    <div>
+                        <h4>${item.name}</h4>
+                        <p>${item.type} | ${item.desc}</p>
+                    </div>
+                    <button class="collect" onclick="collect('${item.name}')">收藏</button>
+                </div>
+                `;
+            });
+            document.getElementById("list-box").innerHTML = html;
+        }
+
+        // 搜索功能
+        function search() {
+            let key = document.getElementById("search").value.trim();
+            if (!key) {
+                showList(resData);
+                return;
+            }
+            let result = resData.filter(item => item.name.includes(key) || item.type.includes(key));
+            showList(result);
+        }
+
+        // 收藏（存到浏览器本地）
+        function collect(name) {
+            let collects = JSON.parse(localStorage.getItem("collects") || "[]");
+            if (!collects.includes(name)) {
+                collects.push(name);
+                localStorage.setItem("collects", JSON.stringify(collects));
+                alert("收藏成功！");
+            } else {
+                alert("已收藏过！");
+            }
+        }
+        // 查看资源详情（弹窗模拟）
+        function showDetail(name, type, desc) {
+            alert(
+                "【资源详情】\n" +
+                "名称：" + name + "\n" +
+                "类型：" + type + "\n" +
+                "介绍：" + desc + "\n\n" +
+                "（校赛演示：点击确定返回列表）"
+            );
+        }
+    </script>
+</body>
+</html>
