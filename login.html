@@ -34,7 +34,7 @@
             
             if(user === 'admin' && pwd === 'admin'){
                 // 修复线上弹回问题，保留所有原有功能
-                window.location.replace('index.html');
+                window.location.href = 'home.html';
             }else{
                 alert('账号或密码错误！');
             }
