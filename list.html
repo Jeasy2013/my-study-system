@@ -16,13 +16,14 @@
         .item h4{color:#333;margin-bottom:5px;}
         .item p{color:#666;font-size:14px;}
         .collect{padding:6px 12px;background:#28a745;color:white;border:none;border-radius:4px;cursor:pointer;}
+        .link-btn{padding:4px 8px;background:#17a2b8;color:white;border:none;border-radius:4px;margin-left:8px;cursor:pointer;}
     </style>
 </head>
 <body>
     <div class="nav">
         <h2>计科学习资源管理系统</h2>
         <div>
-            <a href="index.html">首页</a>
+            <a href="home.html">首页</a>   <!-- 修改为 home.html -->
             <a href="list.html">资源列表</a>
             <a href="upload.html">上传资源</a>
             <a href="user.html">个人中心</a>
@@ -31,7 +32,7 @@
 
     <div class="container">
         <div class="search-box">
-            <input type="text" id="search" placeholder="搜索资源名称">
+            <input type="text" id="search" placeholder="搜索资源名称或类型">
             <button class="search-btn" onclick="search()">搜索</button>
         </div>
 
@@ -39,38 +40,51 @@
     </div>
 
     <script>
-        // 系统自带的资源
-               // 系统自带的资源（加了模拟链接）
+        // 扩充后的资源数据（共18个）
         let resData = [
-            {name:"C语言入门教程.pdf", type:"编程语言", desc:"基础语法+课后习题", link:"https://www.bilibili.com/video/BV17s411s7tQ/"},
-            {name:"数据结构网课.mp4", type:"数据结构", desc:"B站精讲全套", link:"https://www.bilibili.com/video/BV1bW411c7f5/"},
-            {name:"计算机网络思维导图.xmind", type:"计算机网络", desc:"七层模型+协议", link:"https://baike.baidu.com/item/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/14533"},
-            {name:"操作系统期末复习题.doc", type:"操作系统", desc:"真题+答案", link:"https://wenku.baidu.com/"}
+            {name:"C语言入门教程", type:"编程语言", desc:"基础语法+课后习题", link:"https://www.bilibili.com/video/BV17iDaB1EkB/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"数据结构", type:"数据结构", desc:"B站精讲全套", link:"https://www.bilibili.com/video/BV1tNpbekEht/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"计算机网络思维导图", type:"计算机网络", desc:"七层模型+协议", link:"https://img-blog.csdnimg.cn/20201211151744882.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTQwNjE1NQ==,size_16,color_FFFFFF,t_70"},
+            {name:"操作系统", type:"操作系统", desc:"真题+答案", link:"https://www.bilibili.com/video/BV167Awz8EjP/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4/"},
+            {name:"Python核心编程", type:"编程语言", desc:"第三版中文版", link:"https://www.bilibili.com/video/BV1sHU9BmEne/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"Java从入门到精通", type:"编程语言", desc:"包含源码", link:"https://weread.qq.com/web/reader/9de32da0813ab8188g01235ak16732dc0161679091c5aeb1"},
+            {name:"LeetCode刷题笔记", type:"算法", desc:"分类题解200道", link:"https://blog.csdn.net/gitblog_01412/article/details/150056483"},
+            {name:"MySQL必知必会", type:"数据库", desc:"SQL基础与优化", link:"https://blog.csdn.net/EPFL_Panda/article/details/100579485"},
+            {name:"计算机组成原理课件", type:"硬件基础", desc:"唐朔飞版配套", link:"https://www.openke.net/ppt/430/index.html"},
+            {name:"深入理解计算机系统", type:"系统", desc:"CSAPP经典教材", link:"https://www.bilibili.com/video/BV1RK4y1R7Kf/?spm_id_from=333.337.search-card.all.click"},
+            {name:"前端开发入门合集", type:"Web开发", desc:"HTML/CSS/JS", link:"https://www.bilibili.com/video/BV1MvaVzUEuz/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"Linux命令速查表", type:"操作系统", desc:"常用命令大全", link:"https://img-blog.csdnimg.cn/img_convert/e92072d3b52a8dc69b44b29e3aea1968.png"},
+            {name:"Git版本控制指南", type:"开发工具", desc:"从入门到协作", link:"https://blog.csdn.net/2302_80871796/article/details/149141444"},
+            {name:"设计模式精解", type:"软件工程", desc:"23种设计模式", link:"https://www.bilibili.com/video/BV1Yr4y157Ci/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"人工智能导论", type:"AI", desc:"机器学习基础", link:"https://www.tup.tsinghua.edu.cn/upload/books/yz/112436-01.pdf"},
+            {name:"编译原理课程设计", type:"编译技术", desc:"词法语法分析", link:"https://csguide.cn/roadmap/basic/compiler.html"},
+            {name:"计算机网络自顶向下", type:"计算机网络", desc:"经典教材第七版", link:"https://gaia.cs.umass.edu/kurose_ross/ppt.php"},
+            {name:"软件测试方法与实践", type:"测试", desc:"自动化测试入门", link:"https://www.bilibili.com/video/BV1TP4y1J7BD/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"}
         ];
 
-        // 页面加载时显示所有资源
         window.onload = function() {
             showList(resData);
         }
 
-        // 展示列表
         function showList(data) {
             let html = "";
             data.forEach(item => {
                 html += `
-                <div class="item" onclick="showDetail('${item.name}','${item.type}','${item.desc}')">
+                <div class="item">
                     <div>
                         <h4>${item.name}</h4>
                         <p>${item.type} | ${item.desc}</p>
                     </div>
-                    <button class="collect" onclick="collect('${item.name}')">收藏</button>
+                    <div>
+                        <button class="collect" onclick="collect('${item.name}')">收藏</button>
+                        <button class="link-btn" onclick="window.open('${item.link}','_blank')">查看</button>
+                    </div>
                 </div>
                 `;
             });
             document.getElementById("list-box").innerHTML = html;
         }
 
-        // 搜索功能
         function search() {
             let key = document.getElementById("search").value.trim();
             if (!key) {
@@ -81,7 +95,6 @@
             showList(result);
         }
 
-        // 收藏（存到浏览器本地）
         function collect(name) {
             let collects = JSON.parse(localStorage.getItem("collects") || "[]");
             if (!collects.includes(name)) {
@@ -91,16 +104,6 @@
             } else {
                 alert("已收藏过！");
             }
-        }
-        // 查看资源详情（弹窗模拟）
-        function showDetail(name, type, desc) {
-            alert(
-                "【资源详情】\n" +
-                "名称：" + name + "\n" +
-                "类型：" + type + "\n" +
-                "介绍：" + desc + "\n\n" +
-                "（校赛演示：点击确定返回列表）"
-            );
         }
     </script>
 </body>

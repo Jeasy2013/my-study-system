@@ -21,7 +21,7 @@
     <div class="nav">
         <h2>计科学习资源管理系统</h2>
         <div>
-            <a href="index.html">首页</a>
+           <a href="home.html">首页</a>
             <a href="list.html">资源列表</a>
             <a href="upload.html">上传资源</a>
             <a href="user.html">个人中心</a>
@@ -42,33 +42,38 @@
             <label>资源描述</label>
             <textarea id="desc" placeholder="简单介绍一下内容"></textarea>
         </div>
+<div class="form-item">
+    <label>资源链接（可选）</label>
+    <input type="text" id="link" placeholder="例如：https://example.com/resource">
+</div>
         <button class="submit-btn" onclick="upload()">确认上传</button>
     </div>
 
     <script>
-        function upload() {
-            let name = document.getElementById("name").value.trim();
-            let type = document.getElementById("type").value.trim();
-            let desc = document.getElementById("desc").value.trim();
+      function upload() {
+    let name = document.getElementById("name").value.trim();
+    let type = document.getElementById("type").value.trim();
+    let desc = document.getElementById("desc").value.trim();
+    let link = document.getElementById("link").value.trim();   // 新增
 
-            if (!name || !type) {
-                alert("请填写资源名称和类型！");
-                return;
-            }
+    if (!name || !type) {
+        alert("请填写资源名称和类型！");
+        return;
+    }
 
-            // 读取已有的上传资源
-            let myUploads = JSON.parse(localStorage.getItem("myUploads") || "[]");
-            myUploads.push({
-                name: name,
-                type: type,
-                desc: desc
-            });
+    let myUploads = JSON.parse(localStorage.getItem("myUploads") || "[]");
+    myUploads.push({
+        name: name,
+        type: type,
+        desc: desc,
+        link: link || ""   // 无链接则存空字符串
+    });
 
-            // 保存到浏览器
-            localStorage.setItem("myUploads", JSON.stringify(myUploads));
-            alert("上传成功！可在个人中心查看");
-            location.href = "user.html";
-        }
-    </script>
+    localStorage.setItem("myUploads", JSON.stringify(myUploads));
+    alert("上传成功！可在个人中心查看");
+    location.href = "user.html";
+}
+
+            </script>
 </body>
 </html>

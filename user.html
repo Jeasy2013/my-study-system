@@ -8,23 +8,120 @@
         body{background:#f5f7fa;}
         .nav{background:#007bff;color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;}
         .nav a{color:white;margin-left:20px;text-decoration:none;}
-        .container{max-width:900px;margin:30px auto;display:flex;gap:20px;padding:0 15px;}
-        .box{background:white;padding:20px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.05);flex:1;}
+        .container{max-width:1000px;margin:30px auto;display:flex;gap:20px;padding:0 15px;flex-wrap:wrap;}
+        .box{background:white;padding:20px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.05);flex:1;min-width:300px;}
         .box h3{margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:8px;}
-        .item{padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#333;}
+        .item{padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#333;display:flex;justify-content:space-between;align-items:center;}
         .empty{color:#999;text-align:center;padding:20px 0;}
-        .del-btn {
-            padding: 4px 8px;
-            background: #dc3545; /* 红色 */
+        .btn-group{display:flex;gap:8px;}
+        .view-btn {
+            padding: 4px 10px;
+            background: #17a2b8;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
-            margin-left: 10px;
         }
-        .del-btn:hover {
-            background: #bb2d3b; /*  hover 变暗一点 */
+        .view-btn:hover { background: #138496; }
+        .del-btn {
+            padding: 4px 8px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .del-btn:hover { background: #bb2d3b; }
+
+        /* ========== 弹窗模态框 ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            width: 500px;
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+            overflow-y: auto;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #999;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #333; }
+        .modal-content h2 {
+            color: #1E88E5;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            font-size: 24px;
+        }
+        .modal-field {
+            margin-bottom: 18px;
+        }
+        .modal-field label {
+            font-weight: bold;
+            color: #555;
+            display: inline-block;
+            width: 80px;
+        }
+        .modal-field span {
+            color: #222;
+        }
+        .modal-desc {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .modal-link-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+        .modal-link-btn:hover {
+            background: #218838;
+        }
+        .modal-link-btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -32,7 +129,7 @@
     <div class="nav">
         <h2>计科学习资源管理系统</h2>
         <div>
-            <a href="index.html">首页</a>
+            <a href="home.html">首页</a>
             <a href="list.html">资源列表</a>
             <a href="upload.html">上传资源</a>
             <a href="user.html">个人中心</a>
@@ -42,63 +139,174 @@
     <div class="container">
         <!-- 我的收藏 -->
         <div class="box">
-            <h3>我的收藏</h3>
+            <h3>⭐ 我的收藏</h3>
             <div id="collect-list"></div>
         </div>
 
         <!-- 我上传的资源 -->
         <div class="box">
-            <h3>我上传的资源</h3>
+            <h3>📤 我上传的资源</h3>
             <div id="upload-list"></div>
         </div>
     </div>
 
+    <!-- 详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <h2 id="modalTitle">资源详情</h2>
+            <div class="modal-field">
+                <label>名称：</label>
+                <span id="modalName"></span>
+            </div>
+            <div class="modal-field">
+                <label>类型：</label>
+                <span id="modalType"></span>
+            </div>
+            <div class="modal-field">
+                <label>描述：</label>
+            </div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <!-- 链接按钮区域 -->
+            <button class="modal-link-btn" id="modalLinkBtn" style="display: none;">🔗 打开资源链接</button>
+        </div>
+    </div>
+
     <script>
+        // ========== 资源详情映射（与list.html保持一致，并合并上传资源） ==========
+        const resourceMap = new Map();
+        const baseResources = [
+           {name:"C语言入门教程", type:"编程语言", desc:"基础语法+课后习题", link:"https://www.bilibili.com/video/BV17iDaB1EkB/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"数据结构", type:"数据结构", desc:"B站精讲全套", link:"https://www.bilibili.com/video/BV1tNpbekEht/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"计算机网络思维导图", type:"计算机网络", desc:"七层模型+协议", link:"https://img-blog.csdnimg.cn/20201211151744882.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTQwNjE1NQ==,size_16,color_FFFFFF,t_70"},
+            {name:"操作系统", type:"操作系统", desc:"真题+答案", link:"https://www.bilibili.com/video/BV167Awz8EjP/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4/"},
+            {name:"Python核心编程", type:"编程语言", desc:"第三版中文版", link:"https://www.bilibili.com/video/BV1sHU9BmEne/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"Java从入门到精通", type:"编程语言", desc:"包含源码", link:"https://weread.qq.com/web/reader/9de32da0813ab8188g01235ak16732dc0161679091c5aeb1"},
+            {name:"LeetCode刷题笔记", type:"算法", desc:"分类题解200道", link:"https://blog.csdn.net/gitblog_01412/article/details/150056483"},
+            {name:"MySQL必知必会", type:"数据库", desc:"SQL基础与优化", link:"https://blog.csdn.net/EPFL_Panda/article/details/100579485"},
+            {name:"计算机组成原理课件", type:"硬件基础", desc:"唐朔飞版配套", link:"https://www.openke.net/ppt/430/index.html"},
+            {name:"深入理解计算机系统", type:"系统", desc:"CSAPP经典教材", link:"https://www.bilibili.com/video/BV1RK4y1R7Kf/?spm_id_from=333.337.search-card.all.click"},
+            {name:"前端开发入门合集", type:"Web开发", desc:"HTML/CSS/JS", link:"https://www.bilibili.com/video/BV1MvaVzUEuz/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"Linux命令速查表", type:"操作系统", desc:"常用命令大全", link:"https://img-blog.csdnimg.cn/img_convert/e92072d3b52a8dc69b44b29e3aea1968.png"},
+            {name:"Git版本控制指南", type:"开发工具", desc:"从入门到协作", link:"https://blog.csdn.net/2302_80871796/article/details/149141444"},
+            {name:"设计模式精解", type:"软件工程", desc:"23种设计模式", link:"https://www.bilibili.com/video/BV1Yr4y157Ci/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
+            {name:"人工智能导论", type:"AI", desc:"机器学习基础", link:"https://www.tup.tsinghua.edu.cn/upload/books/yz/112436-01.pdf"},
+            {name:"编译原理课程设计", type:"编译技术", desc:"词法语法分析", link:"https://csguide.cn/roadmap/basic/compiler.html"},
+            {name:"计算机网络自顶向下", type:"计算机网络", desc:"经典教材第七版", link:"https://gaia.cs.umass.edu/kurose_ross/ppt.php"},
+            {name:"软件测试方法与实践", type:"测试", desc:"自动化测试入门", link:"https://www.bilibili.com/video/BV1TP4y1J7BD/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"}
+
+        ];
+        baseResources.forEach(r => resourceMap.set(r.name, r));
+
+        // 从 localStorage 读取上传的资源并加入映射（覆盖或补充）
+        const myUploads = JSON.parse(localStorage.getItem("myUploads") || "[]");
+        myUploads.forEach(r => resourceMap.set(r.name, r));
+
+        // 获取弹窗元素
+        const modal = document.getElementById('detailModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalName = document.getElementById('modalName');
+        const modalType = document.getElementById('modalType');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalLinkBtn = document.getElementById('modalLinkBtn');
+
+        let currentResourceLink = '';
+
+        // 显示详情弹窗
+        function showDetail(name) {
+            const resource = resourceMap.get(name);
+            if (resource) {
+                modalName.textContent = resource.name;
+                modalType.textContent = resource.type || '未分类';
+                modalDesc.textContent = resource.desc || '暂无描述';
+                currentResourceLink = resource.link || '';
+            } else {
+                modalName.textContent = name;
+                modalType.textContent = '未知';
+                modalDesc.textContent = '暂无详细信息';
+                currentResourceLink = '';
+            }
+
+            // 控制链接按钮显示
+            if (currentResourceLink) {
+                modalLinkBtn.style.display = 'block';
+                modalLinkBtn.onclick = function() {
+                    if (confirm(`确定要打开以下链接吗？\n${currentResourceLink}`)) {
+                        window.open(currentResourceLink, '_blank');
+                    }
+                };
+            } else {
+                modalLinkBtn.style.display = 'none';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        // 关闭弹窗
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+
+        // ========== 渲染列表 ==========
         window.onload = function() {
-            // 显示收藏
+            // 渲染收藏
             let collects = JSON.parse(localStorage.getItem("collects") || "[]");
             let collectHtml = "";
             if (collects.length === 0) {
                 collectHtml = '<div class="empty">暂无收藏</div>';
             } else {
                 collects.forEach(item => {
-    collectHtml += `<div class="item">
-        ${item}
-        <button class="del-btn" onclick="deleteRes('collect','${item}')">删除</button>
-    </div>`;
-});
+                    collectHtml += `
+                        <div class="item">
+                            <span>📄 ${item}</span>
+                            <div class="btn-group">
+                                <button class="view-btn" onclick="showDetail('${item}')">查看</button>
+                                <button class="del-btn" onclick="deleteRes('collect','${item}')">删除</button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
             document.getElementById("collect-list").innerHTML = collectHtml;
 
-            // 显示上传
-            let myUploads = JSON.parse(localStorage.getItem("myUploads") || "[]");
+            // 渲染上传
             let uploadHtml = "";
             if (myUploads.length === 0) {
                 uploadHtml = '<div class="empty">暂无上传</div>';
             } else {
-               myUploads.forEach(item => {
-    uploadHtml += `<div class="item">
-        ${item.name}（${item.type}）
-        <button class="del-btn" onclick="deleteRes('upload','${item.name}')">删除</button>
-    </div>`;
-});
+                myUploads.forEach(item => {
+                    uploadHtml += `
+                        <div class="item">
+                            <span>📁 ${item.name}（${item.type}）</span>
+                            <div class="btn-group">
+                                <button class="view-btn" onclick="showDetail('${item.name}')">查看</button>
+                                <button class="del-btn" onclick="deleteRes('upload','${item.name}')">删除</button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
             document.getElementById("upload-list").innerHTML = uploadHtml;
-        }
-        // 删除资源：type=collect(收藏)/upload(上传)，name=资源名
+        };
+
+        // 删除功能
         function deleteRes(type, name) {
             if (!confirm(`确定要删除【${name}】吗？`)) return;
-            
             let data = JSON.parse(localStorage.getItem(type === 'collect' ? 'collects' : 'myUploads') || "[]");
-            
-            // 过滤掉要删除的资源（核心逻辑）
             data = data.filter(item => type === 'collect' ? item !== name : item.name !== name);
-            
-            // 保存更新后的数据
             localStorage.setItem(type === 'collect' ? 'collects' : 'myUploads', JSON.stringify(data));
-            
             alert("删除成功！");
-            window.location.reload(); // 刷新页面，显示最新列表
+            window.location.reload();
         }
     </script>
 </body>

@@ -2,60 +2,437 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>学习资源管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资源管理系统 - 首页</title>
     <style>
         *{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "微软雅黑";
+            font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
         }
         body{
+            background: #f5f7fa;
+        }
+
+        /* ========== 顶部导航条 ========== */
+        .navbar {
             background: #1E88E5;
-        }
-        .header{
-            text-align: center;
             color: white;
-            padding: 30px 0;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .container{
-            width: 900px;
-            margin: 50px auto;
+            padding: 0 30px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 30px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .item{
-            width: 380px;
-            height: 180px;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 5px;
+        }
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 20px 20px;
+            font-size: 18px;
+            font-weight: 500;
+            transition: background 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-item.active {
             background: white;
             color: #1E88E5;
-            border-radius: 15px;
+        }
+
+        /* ========== 轮播图区域（全新设计） ========== */
+        .carousel-wrapper {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 400px;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            display: flex;
+            background: #f0f4fc;
+        }
+        /* 左侧图片区 */
+        .slide-img {
+            flex: 1.5;
+            height: 100%;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .slide-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .slide-img:hover img {
+            transform: scale(1.02);
+        }
+        /* 右侧介绍区 */
+        .slide-caption {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        }
+        .slide-caption h3 {
+            font-size: 28px;
+            color: #1E88E5;
+            margin-bottom: 20px;
+            border-left: 5px solid #1E88E5;
+            padding-left: 20px;
+        }
+        .slide-caption p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .slide-caption .tag {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 轮播按钮 */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: 0.3s;
+            transition: background 0.3s;
+            z-index: 10;
+            backdrop-filter: blur(3px);
         }
-        .item:hover{
-            transform: translateY(-5px);
-            background: #f0f7ff;
+        .carousel-btn:hover {
+            background: rgba(0,0,0,0.6);
+        }
+        .btn-prev { left: 20px; }
+        .btn-next { right: 20px; }
+
+        /* 指示点 */
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .dot.active {
+            background: #1E88E5;
+            transform: scale(1.3);
+            box-shadow: 0 0 8px rgba(30,136,229,0.8);
+        }
+
+        /* ========== 内容区域（欢迎语） ========== */
+        .welcome-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .welcome-section h2 {
+            color: #1E88E5;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .welcome-section p {
+            color: #555;
+            font-size: 18px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 850px) {
+            .navbar {
+                flex-direction: column;
+                padding: 10px 15px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav-item {
+                padding: 12px 15px;
+            }
+            .carousel-slides {
+                height: auto;
+                flex-direction: column;
+            }
+            .carousel-slide {
+                flex-direction: column;
+            }
+            .slide-img {
+                height: 250px;
+            }
+            .slide-caption {
+                padding: 20px;
+            }
+        }
+
+        /* ========== 图片放大模态框 ========== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px black;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .lightbox-close:hover {
+            color: #1E88E5;
         }
     </style>
 </head>
 <body>
-    <div class="header">学习资源管理系统</div>
-    <div class="container">
-        <div class="item" onclick="location.href='home.html'">首页</div>
-        <div class="item" onclick="location.href='list.html'">资源列表</div>
-        <div class="item" onclick="location.href='upload.html'">上传资源</div>
-        <div class="item" onclick="location.href='user.html'">个人中心</div>
+    <!-- 顶部导航（四个模块横排） -->
+    <div class="navbar">
+        <div class="logo">📚 学习资源管理系统</div>
+        <div class="nav-links">
+            <a href="home.html" class="nav-item active">🏠 首页</a>
+            <a href="list.html" class="nav-item">📋 资源列表</a>
+            <a href="upload.html" class="nav-item">⬆️ 上传资源</a>
+            <a href="user.html" class="nav-item">👤 个人中心</a>
+        </div>
     </div>
+
+    <!-- 轮播图区域（图片+右侧介绍） -->
+    <div class="carousel-wrapper">
+        <div class="carousel-slides" id="carouselSlides">
+            <!-- 幻灯片 1 -->
+            <div class="carousel-slide">
+                <div class="slide-img" data-full="https://picsum.photos/id/20/1200/800">
+                    <img src="https://picsum.photos/id/20/900/600" alt="编程学习资源">
+                </div>
+                <div class="slide-caption">
+                    <h3>📖 编程入门指南</h3>
+                    <p>精选C语言、Python、Java等编程语言教程，从零基础到项目实战，助你快速掌握编程思维。</p>
+                    <p class="tag">🔥 热门推荐 · 2.3w人学习</p>
+                </div>
+            </div>
+            <!-- 幻灯片 2 -->
+            <div class="carousel-slide">
+                <div class="slide-img" data-full="https://www.tup.tsinghua.edu.cn/upload/bigbookimg3/061117-02.jpg">
+                    <img src="https://www.tup.tsinghua.edu.cn/upload/bigbookimg3/061117-02.jpg" alt="数据结构与算法">
+                </div>
+                <div class="slide-caption">
+                    <h3>🧠 数据结构与算法</h3>
+                    <p>包含链表、树、图、排序算法等经典内容，配合LeetCode刷题笔记，轻松应对面试。</p>
+                    <p class="tag">⭐ 校招必备 · 1.8w人学习</p>
+                </div>
+            </div>
+            <!-- 幻灯片 3 -->
+            <div class="carousel-slide">
+                <div class="slide-img" data-full="https://my-typora-p1.oss-cn-beijing.aliyuncs.com/typoraImgs/202209201725439.png">
+                    <img src="https://my-typora-p1.oss-cn-beijing.aliyuncs.com/typoraImgs/202209201725439.png" alt="计算机网络">
+                </div>
+                <div class="slide-caption">
+                    <h3>🌐 计算机网络</h3>
+                    <p>从物理层到应用层，深入理解TCP/IP协议栈、HTTP/HTTPS，附带Wireshark抓包实验。</p>
+                    <p class="tag">📡 硬核干货 · 9.6k人学习</p>
+                </div>
+            </div>
+            <!-- 幻灯片 4 -->
+            <div class="carousel-slide">
+                <div class="slide-img" data-full="https://images2015.cnblogs.com/blog/1168129/201705/1168129-20170519151640244-1880971746.png">
+                    <img src="https://images2015.cnblogs.com/blog/1168129/201705/1168129-20170519151640244-1880971746.png" alt="操作系统">
+                </div>
+                <div class="slide-caption">
+                    <h3>💻 操作系统</h3>
+                    <p>进程线程、内存管理、文件系统，结合Linux源码分析，理论与实践并重。</p>
+                    <p class="tag">⚙️ 进阶必学 · 7.2k人学习</p>
+                </div>
+            </div>
+        </div>
+        <!-- 左右按钮 -->
+        <button class="carousel-btn btn-prev" id="prevBtn">❮</button>
+        <button class="carousel-btn btn-next" id="nextBtn">❯</button>
+        <!-- 指示点 -->
+        <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- 欢迎区域（可选） -->
+    <div class="welcome-section">
+        <h2>欢迎回来！</h2>
+        <p>这里有丰富的计算机学习资源，祝你学习愉快~</p>
+    </div>
+
+    <!-- 图片放大 Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img id="lightboxImg" src="" alt="放大图片">
+    </div>
+
+    <script>
+        (function() {
+            const slidesContainer = document.getElementById('carouselSlides');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dotsContainer = document.getElementById('carouselDots');
+
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+            let autoPlayInterval = null;
+
+            // 创建指示点
+            function createDots() {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            function updateCarousel() {
+                slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                document.querySelectorAll('.dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === currentIndex);
+                });
+            }
+
+            function goToSlide(index) {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+                currentIndex = index;
+                updateCarousel();
+                resetAutoPlay();
+            }
+
+            function nextSlide() { goToSlide(currentIndex + 1); }
+            function prevSlide() { goToSlide(currentIndex - 1); }
+
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 5000);
+            }
+            function resetAutoPlay() {
+                clearInterval(autoPlayInterval);
+                startAutoPlay();
+            }
+
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            // 触摸滑动
+            let touchStartX = 0;
+            const wrapper = document.querySelector('.carousel-wrapper');
+            wrapper.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+            wrapper.addEventListener('touchend', (e) => {
+                const diff = e.changedTouches[0].screenX - touchStartX;
+                if (Math.abs(diff) > 50) {
+                    diff > 0 ? prevSlide() : nextSlide();
+                }
+            });
+
+            wrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+            wrapper.addEventListener('mouseleave', () => startAutoPlay());
+
+            // 初始化
+            createDots();
+            startAutoPlay();
+            window.addEventListener('resize', updateCarousel);
+
+            // ========== 图片放大功能 ==========
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxClose = document.getElementById('lightboxClose');
+
+            // 为所有图片绑定点击放大事件
+            document.querySelectorAll('.slide-img').forEach(imgContainer => {
+                imgContainer.addEventListener('click', function(e) {
+                    const fullSrc = this.getAttribute('data-full');
+                    if (fullSrc) {
+                        lightboxImg.src = fullSrc;
+                        lightbox.style.display = 'flex';
+                    }
+                });
+            });
+
+            // 关闭灯箱
+            lightboxClose.addEventListener('click', () => {
+                lightbox.style.display = 'none';
+            });
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    lightbox.style.display = 'none';
+                }
+            });
+            // ESC 键关闭
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+                    lightbox.style.display = 'none';
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
