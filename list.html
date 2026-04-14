@@ -4,26 +4,176 @@
     <meta charset="UTF-8">
     <title>资源列表</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
-        body{background:#f5f7fa;}
-        .nav{background:#007bff;color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;}
-        .nav a{color:white;margin-left:20px;text-decoration:none;}
-        .container{padding:30px;max-width:1000px;margin:0 auto;}
-        .search-box{margin-bottom:20px;display:flex;gap:10px;}
-        #search{flex:1;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:15px;}
-        .search-btn{padding:10px 20px;background:#007bff;color:white;border:none;border-radius:5px;cursor:pointer;}
-        .item{background:white;padding:15px;border-radius:8px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center;}
-        .item h4{color:#333;margin-bottom:5px;}
-        .item p{color:#666;font-size:14px;}
-        .collect{padding:6px 12px;background:#28a745;color:white;border:none;border-radius:4px;cursor:pointer;}
-        .link-btn{padding:4px 8px;background:#17a2b8;color:white;border:none;border-radius:4px;margin-left:8px;cursor:pointer;}
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+        }
+        body{
+            background:#f5f7fa;
+        }
+        .nav{
+            background:#007bff;
+            color:white;
+            padding:15px 30px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .nav a{
+            color:white;
+            margin-left:20px;
+            text-decoration:none;
+        }
+        .container{
+            max-width:1000px;
+            margin:30px auto;
+            padding:0 20px;
+        }
+        .search-box{
+            margin-bottom:30px;
+            display:flex;
+            gap:10px;
+        }
+        #search{
+            flex:1;
+            padding:12px 18px;
+            border:1px solid #ddd;
+            border-radius:30px;
+            font-size:16px;
+            outline:none;
+            transition:0.3s;
+        }
+        #search:focus{
+            border-color:#007bff;
+            box-shadow:0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .search-btn{
+            padding:12px 25px;
+            background:#007bff;
+            color:white;
+            border:none;
+            border-radius:30px;
+            font-size:16px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .search-btn:hover{
+            background:#0056b3;
+        }
+
+        /* ========= 资源卡片（放大、居中） ========= */
+        .item{
+            background:white;
+            padding:20px 25px;
+            border-radius:16px;
+            margin-bottom:18px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.05);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            transition:0.2s;
+            border:1px solid #f0f0f0;
+        }
+        .item:hover{
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+            transform:translateY(-2px);
+        }
+        .item-info h4{
+            color:#1E88E5;
+            margin-bottom:8px;
+            font-size:20px;
+        }
+        .item-info p{
+            color:#666;
+            font-size:15px;
+        }
+        .item-actions{
+            display:flex;
+            gap:10px;
+        }
+        .collect{
+            padding:8px 18px;
+            background:#28a745;
+            color:white;
+            border:none;
+            border-radius:30px;
+            cursor:pointer;
+            font-size:15px;
+            transition:0.2s;
+        }
+        .collect:hover{
+            background:#218838;
+        }
+        .link-btn{
+            padding:8px 18px;
+            background:#17a2b8;
+            color:white;
+            border:none;
+            border-radius:30px;
+            cursor:pointer;
+            font-size:15px;
+            transition:0.2s;
+        }
+        .link-btn:hover{
+            background:#138496;
+        }
+
+        /* ========= 分页控件 ========= */
+        .pagination{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:12px;
+            margin-top:40px;
+            flex-wrap:wrap;
+        }
+        .page-btn{
+            min-width:42px;
+            height:42px;
+            padding:0 12px;
+            background:white;
+            border:1px solid #ddd;
+            border-radius:30px;
+            color:#333;
+            font-size:16px;
+            cursor:pointer;
+            transition:0.2s;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .page-btn:hover{
+            background:#f0f0f0;
+        }
+        .page-btn.active{
+            background:#007bff;
+            color:white;
+            border-color:#007bff;
+        }
+        .page-btn.disabled{
+            opacity:0.5;
+            cursor:not-allowed;
+        }
+        .page-info{
+            color:#666;
+            font-size:15px;
+            margin:0 10px;
+        }
+        .empty-msg{
+            text-align:center;
+            padding:60px 0;
+            color:#999;
+            font-size:18px;
+        }
     </style>
 </head>
 <body>
     <div class="nav">
-        <h2>计科学习资源管理系统</h2>
+        <h2>📚 计科学习资源管理系统</h2>
         <div>
-            <a href="home.html">首页</a>   <!-- 修改为 home.html -->
+            <a href="home.html">首页</a>
             <a href="list.html">资源列表</a>
             <a href="upload.html">上传资源</a>
             <a href="user.html">个人中心</a>
@@ -32,15 +182,16 @@
 
     <div class="container">
         <div class="search-box">
-            <input type="text" id="search" placeholder="搜索资源名称或类型">
+            <input type="text" id="search" placeholder="🔍 搜索资源名称或类型">
             <button class="search-btn" onclick="search()">搜索</button>
         </div>
 
         <div id="list-box"></div>
+        <div id="pagination-box" class="pagination"></div>
     </div>
 
     <script>
-        // 扩充后的资源数据（共18个）
+        // 资源数据（共18个，保持不变）
         let resData = [
             {name:"C语言入门教程", type:"编程语言", desc:"基础语法+课后习题", link:"https://www.bilibili.com/video/BV17iDaB1EkB/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
             {name:"数据结构", type:"数据结构", desc:"B站精讲全套", link:"https://www.bilibili.com/video/BV1tNpbekEht/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"},
@@ -62,39 +213,135 @@
             {name:"软件测试方法与实践", type:"测试", desc:"自动化测试入门", link:"https://www.bilibili.com/video/BV1TP4y1J7BD/?spm_id_from=333.337.search-card.all.click&vd_source=0e4249f450cf489abf1e363cfe6c59d4"}
         ];
 
+        const pageSize = 5;                 // 每页显示5条
+        let currentPage = 1;               // 当前页码
+        let currentData = resData;         // 当前展示的数据（搜索结果或全部）
+
+        // 初始化
         window.onload = function() {
-            showList(resData);
+            renderPage();
+        };
+
+        // 渲染当前页
+        function renderPage() {
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = currentData.slice(start, end);
+            
+            // 渲染列表
+            let html = '';
+            if (pageData.length === 0) {
+                html = '<div class="empty-msg">📭 没有找到相关资源</div>';
+            } else {
+                pageData.forEach(item => {
+                    html += `
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>${item.name}</h4>
+                            <p>${item.type} ｜ ${item.desc}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="collect" onclick="collect('${item.name}')">⭐ 收藏</button>
+                            <button class="link-btn" onclick="window.open('${item.link}','_blank')">🔗 查看</button>
+                        </div>
+                    </div>
+                    `;
+                });
+            }
+            document.getElementById('list-box').innerHTML = html;
+            
+            // 渲染分页控件
+            renderPagination();
         }
 
-        function showList(data) {
-            let html = "";
-            data.forEach(item => {
-                html += `
-                <div class="item">
-                    <div>
-                        <h4>${item.name}</h4>
-                        <p>${item.type} | ${item.desc}</p>
-                    </div>
-                    <div>
-                        <button class="collect" onclick="collect('${item.name}')">收藏</button>
-                        <button class="link-btn" onclick="window.open('${item.link}','_blank')">查看</button>
-                    </div>
-                </div>
-                `;
-            });
-            document.getElementById("list-box").innerHTML = html;
-        }
-
-        function search() {
-            let key = document.getElementById("search").value.trim();
-            if (!key) {
-                showList(resData);
+        // 渲染分页
+        function renderPagination() {
+            const totalPages = Math.ceil(currentData.length / pageSize);
+            const paginationBox = document.getElementById('pagination-box');
+            
+            if (totalPages <= 1) {
+                paginationBox.innerHTML = '';
                 return;
             }
-            let result = resData.filter(item => item.name.includes(key) || item.type.includes(key));
-            showList(result);
+
+            let paginationHtml = '';
+            
+            // 上一页
+            if (currentPage > 1) {
+                paginationHtml += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">‹ 上一页</button>`;
+            } else {
+                paginationHtml += `<button class="page-btn disabled" disabled>‹ 上一页</button>`;
+            }
+
+            // 页码
+            const maxVisible = 5; // 最多显示5个页码
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+            if (endPage - startPage < maxVisible - 1) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+
+            if (startPage > 1) {
+                paginationHtml += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if (startPage > 2) {
+                    paginationHtml += `<span style="padding:0 5px;">…</span>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHtml += `<button class="page-btn active">${i}</button>`;
+                } else {
+                    paginationHtml += `<button class="page-btn" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHtml += `<span style="padding:0 5px;">…</span>`;
+                }
+                paginationHtml += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+
+            // 下一页
+            if (currentPage < totalPages) {
+                paginationHtml += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">下一页 ›</button>`;
+            } else {
+                paginationHtml += `<button class="page-btn disabled" disabled>下一页 ›</button>`;
+            }
+
+            // 页码信息
+            paginationHtml += `<span class="page-info">第 ${currentPage} / ${totalPages} 页 (共 ${currentData.length} 条)</span>`;
+            
+            paginationBox.innerHTML = paginationHtml;
         }
 
+        // 跳转页面
+        function goToPage(page) {
+            const totalPages = Math.ceil(currentData.length / pageSize);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderPage();
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 搜索功能（保留原有逻辑，重置为第一页）
+        function search() {
+            let key = document.getElementById('search').value.trim().toLowerCase();
+            if (!key) {
+                currentData = resData;
+            } else {
+                currentData = resData.filter(item => 
+                    item.name.toLowerCase().includes(key) || 
+                    item.type.toLowerCase().includes(key)
+                );
+            }
+            currentPage = 1;  // 重置到第一页
+            renderPage();
+        }
+
+        // 收藏功能（完全保留）
         function collect(name) {
             let collects = JSON.parse(localStorage.getItem("collects") || "[]");
             if (!collects.includes(name)) {
